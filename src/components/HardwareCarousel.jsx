@@ -3,6 +3,7 @@ import { ArrowRight, ArrowLeft, ChevronRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+// ... (Tu array hardwareData se mantiene exactamente igual)
 const hardwareData = [
   {
     id: 1,
@@ -68,7 +69,7 @@ const HardwareCarousel = () => {
   // Refs
   const textContainerRef = useRef(null);
   const trackRef = useRef(null);
-  const imagesRef = useRef([]); // Array de refs para controlar cada imagen individualmente
+  const imagesRef = useRef([]);
 
   // --- NAVEGACIÓN ---
   const handleNext = () => {
@@ -82,8 +83,7 @@ const HardwareCarousel = () => {
   // --- ANIMACIONES (GSAP) ---
   useGSAP(() => {
     
-    // 1. TEXTO: Animación en cascada (Stagger)
-    // Seleccionamos los hijos del contenedor de texto (h3, p, a)
+    // 1. TEXTO
     if (textContainerRef.current) {
         const textElements = textContainerRef.current.children;
         gsap.fromTo(textElements, 
@@ -92,37 +92,36 @@ const HardwareCarousel = () => {
                 y: 0, 
                 opacity: 1, 
                 duration: 0.5, 
-                stagger: 0.1, // Retraso entre cada elemento
+                stagger: 0.1, 
                 ease: "power2.out" 
             }
         );
     }
 
-    // 2. TRACK: Movimiento del carrusel
+    // 2. TRACK
     if (trackRef.current) {
         const totalSlides = hardwareData.length;
         const xPercentage = -(activeIndex * 100) / totalSlides;
 
         gsap.to(trackRef.current, {
             xPercent: xPercentage,
-            duration: 1.2, // Duración larga para suavidad
-            ease: "expo.out" // 'expo' da ese efecto de arranque rápido y frenado muy suave (Apple style)
+            duration: 1.2,
+            ease: "expo.out"
         });
     }
 
-    // 3. IMÁGENES: Escala y Opacidad individual
-    // En lugar de CSS, usamos GSAP para sincronizarlo con el movimiento del track
+    // 3. IMÁGENES
     imagesRef.current.forEach((img, index) => {
         if (!img) return;
         
         const isActive = index === activeIndex;
 
         gsap.to(img, {
-            scale: isActive ? 1 : 0.9,      // Activa: 100%, Otras: 90%
-            opacity: isActive ? 1 : 0.4,    // Activa: visible, Otras: muy tenues
-            filter: isActive ? "blur(0px)" : "blur(2px)", // Desenfoque sutil a las inactivas
+            scale: isActive ? 1 : 0.9,
+            opacity: isActive ? 1 : 0.4,
+            filter: isActive ? "blur(0px)" : "blur(2px)",
             duration: 1.2,
-            ease: "expo.out" // Misma curva que el track para que se muevan al unísono
+            ease: "expo.out"
         });
     });
 
@@ -130,32 +129,38 @@ const HardwareCarousel = () => {
 
   const currentItem = hardwareData[activeIndex];
 
+  // Detectar ancho de pantalla para ajustar el "peek" (opcional, pero mejora UX en móvil)
+  // Nota: Para mantenerlo simple con CSS puro en el style, usamos una variable o media query lógica
+  // En este caso, usaremos una lógica CSS simple en el style del track.
+
   return (
-    <section className="bg-white w-full py-16 md:py-24 px-6 md:px-12 overflow-hidden">
+    // CAMBIO 1: Ajuste de padding vertical (py-12 en movil, py-24 en desktop) y padding horizontal (px-4 vs px-12)
+    <section className="bg-white w-full py-12 md:py-24 px-4 md:px-12 overflow-hidden">
       
-      {/* Título Estático */}
-      <div className="max-w-7xl mx-auto mb-12 md:mb-20">
-        <h2 className="text-4xl md:text-[56px] font-serif text-gray-900 leading-tight tracking-tight">
+      {/* Título: Ajuste de tamaño de fuente (text-3xl vs text-[56px]) */}
+      <div className="max-w-7xl mx-auto mb-8 md:mb-20">
+        <h2 className="text-3xl md:text-[56px] font-serif text-gray-900 leading-tight tracking-tight">
           Hardware para mejorar tu día a día
         </h2>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 min-h-[500px]">
+      <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row gap-8 lg:gap-16">
         
         {/* --- COLUMNA IZQUIERDA: TEXTO --- */}
-        <div className="w-full lg:w-1/3 flex flex-col justify-between relative z-20 py-4">
+        <div className="w-full lg:w-1/3 flex flex-col justify-center lg:justify-between relative z-20 py-4">
           
-          {/* Contenedor del Texto (Usamos ref aquí para animar los hijos) */}
-          <div ref={textContainerRef} className="flex flex-col items-start min-h-[200px]">
-            <h3 className="text-2xl md:text-[32px] font-bold text-gray-900 mb-6 leading-tight">
+          <div ref={textContainerRef} className="flex flex-col items-start min-h-[180px] md:min-h-[200px]">
+            {/* Título del item: Ajuste responsive */}
+            <h3 className="text-2xl md:text-[32px] font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
               {currentItem.title}
             </h3>
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            {/* Descripción: Ajuste responsive */}
+            <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8 leading-relaxed">
               {currentItem.description}
             </p>
             <a 
               href={currentItem.url} 
-              className="inline-flex items-center text-lg font-bold text-blue-600 hover:text-blue-800 transition-colors group"
+              className="inline-flex items-center text-base md:text-lg font-bold text-blue-600 hover:text-blue-800 transition-colors group"
             >
               <span className="hover:underline underline-offset-4 decoration-2">
                  {currentItem.linkText}
@@ -166,33 +171,35 @@ const HardwareCarousel = () => {
             </a>
           </div>
 
-          {/* Botones Fijos */}
-          <div className="flex items-center gap-4 mt-8">
+          {/* Botones: Ajuste para que no estén tan pegados en móvil */}
+          <div className="flex items-center gap-4 mt-6 md:mt-8">
             <button 
               onClick={handlePrev}
-              className="group p-3 border border-gray-300 rounded-full hover:bg-gray-100 transition-all duration-300 focus:outline-none active:scale-95"
+              className="group p-3 border border-gray-300 rounded-full hover:bg-gray-100 transition-all duration-300 focus:outline-none active:scale-95 touch-manipulation"
               aria-label="Anterior"
             >
-              <ArrowLeft className="w-6 h-6 text-gray-900 group-hover:scale-105 transition-transform" />
+              <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-900 group-hover:scale-105 transition-transform" />
             </button>
             <button 
               onClick={handleNext}
-              className="group p-3 border border-gray-300 rounded-full hover:bg-gray-100 transition-all duration-300 focus:outline-none active:scale-95"
+              className="group p-3 border border-gray-300 rounded-full hover:bg-gray-100 transition-all duration-300 focus:outline-none active:scale-95 touch-manipulation"
               aria-label="Siguiente"
             >
-              <ArrowRight className="w-6 h-6 text-gray-900 group-hover:scale-105 transition-transform" />
+              <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-gray-900 group-hover:scale-105 transition-transform" />
             </button>
           </div>
         </div>
 
         {/* --- COLUMNA DERECHA: CARRUSEL --- */}
-        <div className="w-full lg:w-2/3 relative h-[400px] lg:h-[600px] overflow-hidden rounded-xl bg-gray-50/30">
+        {/* CAMBIO 2: Altura dinámica. h-[320px] en móvil, crece a lg:h-[600px] para desktop */}
+        <div className="w-full lg:w-2/3 relative h-[320px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-xl bg-gray-50/30">
             
-            {/* EL TRACK */}
             <div 
                 ref={trackRef}
                 className="flex h-full items-center"
                 style={{ 
+                    // En desktop mantenemos el 85% para el efecto "peek".
+                    // En CSS, esto se comporta bien responsive si el contenedor padre cambia de tamaño.
                     width: `${hardwareData.length * 85}%`, 
                     display: 'flex' 
                 }} 
@@ -200,21 +207,21 @@ const HardwareCarousel = () => {
                 {hardwareData.map((item, index) => (
                     <div 
                         key={item.id}
-                        // Cada contenedor ocupa una fracción exacta del track
                         style={{ width: `${100 / hardwareData.length}%` }} 
-                        className="h-full flex-shrink-0 flex items-center justify-start px-4"
+                        className="h-full flex-shrink-0 flex items-center justify-start px-2 md:px-4"
                     >
-                         {/* Wrapper de la imagen */}
-                         <div className="w-full h-full flex items-center justify-center relative p-4">
+                          {/* Wrapper de la imagen */}
+                          <div className="w-full h-full flex items-center justify-center relative p-2 md:p-4">
                             
                             <img
-                                ref={el => imagesRef.current[index] = el} // Guardamos la ref para animarla
+                                ref={el => imagesRef.current[index] = el}
                                 src={item.image}
                                 alt={item.title}
                                 className="w-full h-full object-contain drop-shadow-xl"
-                                style={{ maxHeight: '500px' }}
+                                // CAMBIO 3: Max height ajustado para que no se corte en móvil
+                                style={{ maxHeight: '100%' }}
                             />
-                         </div>
+                          </div>
                     </div>
                 ))}
             </div>
