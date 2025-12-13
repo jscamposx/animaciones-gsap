@@ -168,7 +168,7 @@ const Hero = () => {
             // Ahora GSAP controla el width/height inicial según el dispositivo.
             className="bg-white z-30 flex flex-col justify-center relative border-r border-gray-100 order-2 lg:order-1 overflow-hidden"
         >
-            <div ref={leftContentInnerRef} className="w-full max-w-xl mx-auto px-6 lg:px-12 flex flex-col justify-center h-full ">
+            <div ref={leftContentInnerRef} className="w-full max-w-xl mx-auto px-6 lg:px-12 flex flex-col lg:justify-center h-full ">
                 
                 {/* Tabs Responsive */}
                 <div className="flex overflow-x-auto pb-4 lg:pb-0 lg:flex-wrap gap-2 mb-4 lg:mb-8 no-scrollbar">
@@ -227,7 +227,7 @@ const Hero = () => {
         {/* --- LADO DERECHO (VIDEO) --- */}
         <div 
             ref={rightSideWrapperRef} 
-            className="h-full flex items-center justify-center relative z-20 order-1 lg:order-2"
+            className="flex-grow h-full flex items-center justify-center relative z-20 order-1 lg:order-2"
         >
             <div 
                 ref={videoInnerRef}
@@ -255,9 +255,6 @@ const Hero = () => {
 
       </div>
 
-      <div className="h-[50vh] bg-gray-50 flex items-center justify-center relative z-10">
-        <p className="text-gray-400">Continúa haciendo scroll...</p>
-      </div>
     </div>
   );
 };
