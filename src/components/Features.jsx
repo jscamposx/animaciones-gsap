@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// --- DATOS (Sin cambios) ---
 const featuresData = [
   {
     title: "Acepta cualquier tipo de pago",
@@ -18,7 +19,7 @@ const featuresData = [
         { headline: "Pagos sin conexión", text: "Sigue haciendo ventas aun si pierdes el servicio o la conexión Wi-Fi. Guardaremos tus recibos y pagos sin conexión durante 24 horas." },
         { headline: "Descuentos automáticos", text: "Crea descuentos automáticos para artículos específicos, categorías, cantidades, especiales diarios u ofertas de tiempo limitado." },
         { headline: "Transferencias rápidas", text: "Transfiere fondos a una cuenta bancaria externa gratis al siguiente día hábil o al instante por una comisión." },
-        { headline: "Seguridad integrada", text: "La protección contra fraudes, la seguridad de datos, la administración de reclamos y el cumplimiento de los estándares PCI están integrados." }
+        { headline: "Seguridad integrada", text: "La protección contra fraudes, la seguridad de datos, la administración de reclamos y el cumplimiento de los estándares PCI están integrados en tu PDV." }
     ]
   },
   {
@@ -41,8 +42,7 @@ const featuresData = [
     modalDetails: [
         { headline: "Permisos de equipo", text: "Controla qué información y funciones puede ver cada empleado con códigos de acceso personalizados." },
         { headline: "Perfiles de clientes", text: "Guarda información de tus clientes habituales, su historial de compras y preferencias automáticamente." },
-        { headline: "Gestión de ubicaciones", text: "Administra múltiples sucursales desde una sola cuenta maestra con reportes unificados." },
-        { headline: "Hardware compatible", text: "Conecta impresoras de recibos, cajones de efectivo y escáneres de forma plug-and-play." }
+        { headline: "Gestión de ubicaciones", text: "Administra múltiples sucursales desde una sola cuenta maestra con reportes unificados." }
     ]
   },
   {
@@ -53,24 +53,56 @@ const featuresData = [
     modalDetails: [
         { headline: "Reportes de ventas", text: "Visualiza tus ventas brutas, netas y por categoría en tiempo real desde cualquier dispositivo." },
         { headline: "Análisis de empleados", text: "Identifica a tus mejores vendedores y optimiza los horarios laborales según el flujo de clientes." },
-        { headline: "Integraciones", text: "Conecta tu PDV con aplicaciones de contabilidad como QuickBooks, Xero y más." },
-        { headline: "Marketing integrado", text: "Envía correos electrónicos y mensajes de texto promocionales directamente desde tu base de datos de clientes." }
+        { headline: "Integraciones", text: "Conecta tu PDV con aplicaciones de contabilidad como QuickBooks, Xero y más." }
     ]
   }
 ];
 
-// --- MODAL ---
+// --- MODAL: ANIMACIÓN SÓLIDA ---
 const FeatureModal = ({ feature, onClose }) => {
+  // Usamos refs separados para no afectar la opacidad del hijo al animar el padre
+  const containerRef = useRef(null); 
+  const backdropRef = useRef(null);
   const modalRef = useRef(null);
-  const contentRef = useRef(null);
+  
+  const isClosing = useRef(false);
 
   useGSAP(() => {
-    gsap.fromTo(modalRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-    gsap.fromTo(contentRef.current, 
-      { y: 30, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out", delay: 0.1 }
+    // ENTRADA
+    // 1. El backdrop aparece suave
+    gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    
+    // 2. El modal sube SÓLIDO (Solo Y, nada de opacidad)
+    gsap.fromTo(modalRef.current, 
+      { y: "100%" }, 
+      { y: "0%", duration: 0.5, ease: "power3.out" }
     );
-  }, { scope: modalRef });
+  }, { scope: containerRef });
+
+  // FUNCIÓN DE CIERRE
+  const handleClose = () => {
+    if (isClosing.current) return;
+    isClosing.current = true;
+
+    const tl = gsap.timeline({
+      onComplete: onClose // Desmontar React al terminar
+    });
+
+    // PASO 1: El modal baja SÓLIDO. 
+    // No tocamos la opacidad, así que se ve blanco puro mientras baja.
+    tl.to(modalRef.current, {
+      y: "100%", 
+      duration: 0.4,
+      ease: "power3.in"
+    });
+
+    // PASO 2: El fondo negro se desvanece SIMULTÁNEAMENTE o un poco después
+    // El '<' indica que empiece al mismo tiempo que la animación anterior
+    tl.to(backdropRef.current, {
+      opacity: 0,
+      duration: 0.4
+    }, "<"); 
+  };
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -80,61 +112,79 @@ const FeatureModal = ({ feature, onClose }) => {
   if (!feature) return null;
 
   return (
-    <div ref={modalRef} className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
-      <div onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-pointer transition-colors"></div>
-      <div ref={contentRef} className="relative bg-white w-full max-w-6xl max-h-[90vh] rounded-lg shadow-2xl flex flex-col overflow-hidden">
-        <div className="flex justify-between items-start p-8 md:p-12 pb-0">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif max-w-2xl leading-tight">
+    // Contenedor fijo (Z-Index alto)
+    <div ref={containerRef} className="fixed inset-0 z-[100] flex items-end md:items-center justify-center">
+      
+      {/* 1. BACKDROP (Fondo negro) 
+          Separado del modal para poder animar su opacidad independientemente.
+      */}
+      <div 
+        ref={backdropRef}
+        onClick={handleClose} 
+        className="absolute inset-0 bg-black/60 backdrop-blur-[2px] cursor-pointer"
+      ></div>
+      
+      {/* 2. VENTANA MODAL 
+          No tiene opacidad animada. Solo se mueve en Y.
+      */}
+      <div 
+        ref={modalRef} 
+        className="relative bg-white w-full h-full md:w-[96%] md:max-w-[1600px] md:h-[92vh] md:rounded-xl shadow-2xl flex flex-col overflow-hidden will-change-transform"
+      >
+        
+        {/* Header */}
+        <div className="flex justify-between items-start pt-10 px-8 md:pt-14 md:px-16 pb-8 bg-white shrink-0">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 font-sans tracking-tight max-w-4xl">
                 {feature.title}
             </h2>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors ml-4">
+            
+            <button 
+                onClick={handleClose} 
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors -mr-2 -mt-2"
+                aria-label="Cerrar"
+            >
                 <X className="w-8 h-8 text-gray-900" />
             </button>
         </div>
-        <div className="p-8 md:p-12 overflow-y-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-8 md:px-16 pb-16 custom-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-12 mt-8">
                 {feature.modalDetails && feature.modalDetails.map((item, idx) => (
-                    <div key={idx} className="flex flex-col gap-2">
-                        <h4 className="text-lg font-bold text-gray-900">{item.headline}</h4>
-                        <p className="text-base text-gray-600 leading-relaxed">{item.text}</p>
-                        <div className="w-full h-px bg-gray-200 mt-4 md:hidden"></div>
+                    <div 
+                        key={idx} 
+                        className="flex flex-col gap-4 pt-8 border-t border-gray-300"
+                    >
+                        <h4 className="text-lg font-bold text-gray-900 leading-snug">
+                            {item.headline}
+                        </h4>
+                        <p className="text-[17px] text-gray-600 leading-relaxed font-light">
+                            {item.text}
+                        </p>
                     </div>
                 ))}
             </div>
+            <div className="h-20"></div>
         </div>
       </div>
     </div>
   );
 };
 
-// --- COMPONENTE PRINCIPAL ---
+// --- COMPONENTE PRINCIPAL (Sin cambios) ---
 const Features = () => {
   const containerRef = useRef(null);
   const [selectedFeature, setSelectedFeature] = useState(null);
 
   useGSAP(() => {
-    // CAMBIO IMPORTANTE: Usamos un selector de clase en lugar de refs manuales
-    // Esto es mucho más seguro para listas dinámicas
     const rows = gsap.utils.toArray('.feature-card'); 
-
     rows.forEach((row) => {
       gsap.fromTo(row, 
-        { 
-          opacity: 0, 
-          y: 50 // Reduje la distancia para que sea más fácil que entre en viewport
-        }, 
+        { opacity: 0, y: 40 }, 
         {
-          opacity: 1, 
-          y: 0, 
-          duration: 0.8, 
-          ease: "power2.out",
+          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
           scrollTrigger: {
-            trigger: row,
-            // Empieza cuando el elemento toca el 90% inferior de la pantalla
-            // (casi apenas aparece)
-            start: "top 90%", 
-            end: "bottom 20%",
-            toggleActions: "play none none reverse"
+            trigger: row, start: "top 85%", toggleActions: "play none none reverse"
           }
         }
       );
@@ -143,63 +193,34 @@ const Features = () => {
 
   return (
     <>
-      <section ref={containerRef} className="bg-white w-full py-24 px-6 md:px-12 overflow-hidden">
-        
-        <div className="max-w-4xl mx-auto text-center mb-24">
-          <h2 className="text-4xl md:text-6xl font-serif text-gray-900 leading-tight font-medium">
-            Vende sin problemas en <br className="hidden md:block" /> una o cien sucursales
+      <section ref={containerRef} className="bg-white w-full py-20 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto mb-20 md:mb-28">
+          <h2 className="text-4xl md:text-[64px] font-serif text-gray-900 leading-[1.05] tracking-tight max-w-4xl">
+            Vende sin problemas en una o cien sucursales
           </h2>
         </div>
 
-        <div className="flex flex-col gap-24 lg:gap-32 max-w-7xl mx-auto">
+        <div className="max-w-[1400px] mx-auto flex flex-col">
           {featuresData.map((feature, index) => (
-            <div 
-              key={index}
-              // AÑADIMOS ESTA CLASE 'feature-card' para que GSAP la encuentre automáticamente
-              className={`feature-card flex flex-col lg:flex-row items-center gap-12 lg:gap-24 
-                ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''} 
-              `}
-            >
-              {/* IMAGEN */}
-              <div className="w-full lg:w-1/2">
-                <div 
-                  className="bg-gray-100 rounded-3xl overflow-hidden aspect-[4/3] lg:aspect-auto shadow-sm group cursor-pointer" 
-                  onClick={() => setSelectedFeature(feature)}
-                >
-                  <img 
-                    src={feature.image} 
-                    alt={feature.alt}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                    loading="lazy" 
-                  />
+            <div key={index} className="feature-card group">
+              <div className="w-full h-px bg-gray-200 mb-12"></div>
+              <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-24 mb-16">
+                <div className="w-full lg:w-[45%]">
+                  <div className="overflow-hidden rounded-xl cursor-pointer bg-gray-50 aspect-[4/3] lg:aspect-[16/10]" onClick={() => setSelectedFeature(feature)}>
+                    <img src={feature.image} alt={feature.alt} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105" />
+                  </div>
                 </div>
-              </div>
-
-              {/* TEXTO */}
-              <div className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left">
-                  <h3 className="text-3xl md:text-4xl font-serif text-gray-900 mb-6 font-medium">
-                    {feature.title}
-                  </h3>
-                  <p className="text-lg text-gray-600 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                    {feature.description}
-                  </p>
-                  
-                  <button 
-                    onClick={() => setSelectedFeature(feature)}
-                    className="inline-flex items-center justify-center lg:justify-start text-lg font-bold text-gray-900 group"
-                  >
-                    <span className="border-b-2 border-transparent group-hover:border-black transition-all duration-300">
-                      Más información
-                    </span>
-                    <div className="ml-2 p-1 bg-gray-100 rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                      <Plus className="w-4 h-4" />
-                    </div>
-                  </button>
+                <div className="w-full lg:w-[55%] flex flex-col justify-start pt-4">
+                    <h3 className="text-3xl md:text-[32px] font-bold text-gray-900 mb-5 leading-tight">{feature.title}</h3>
+                    <p className="text-[18px] text-gray-600 mb-8 leading-relaxed max-w-2xl">{feature.description}</p>
+                    <button onClick={() => setSelectedFeature(feature)} className="inline-flex items-center text-[18px] font-bold text-gray-900 hover:underline decoration-2 underline-offset-4 transition-all">
+                      Más información <Plus className="w-5 h-5 ml-2 stroke-[3]" />
+                    </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
-
       </section>
 
       {selectedFeature && (
