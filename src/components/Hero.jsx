@@ -52,6 +52,8 @@ const Hero = () => {
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
+
+    // --- DESKTOP (INTACTO, NO SE TOCA) ---
     mm.add("(min-width: 1024px)", () => {
       gsap.set(leftContentRef.current, { width: "0%", height: "100%", opacity: 0 });
       const tl = gsap.timeline({
@@ -76,6 +78,7 @@ const Hero = () => {
       tl.to(overlayRef.current, { opacity: 0, duration: 1 }, "splitMove+=1");
     });
 
+    // --- MOBILE (AJUSTADO) ---
     mm.add("(max-width: 1023px)", () => {
       gsap.set(leftContentRef.current, { width: "100%", height: "0%", opacity: 0 });
       const tl = gsap.timeline({
@@ -87,11 +90,29 @@ const Hero = () => {
           pin: true,
         },
       });
-      tl.to(videoInnerRef.current, { width: "100vw", height: "100vh", borderRadius: "0px", duration: 1 });
+      
+      // 1. Expandimos el video
+      tl.to(videoInnerRef.current, { 
+        width: "100%", 
+        height: "100vh", 
+        borderRadius: "0px", 
+        duration: 1 
+      });
+
+      // 2. NUEVO: Eliminamos el padding del contenedor padre AL MISMO TIEMPO
+      // El "<" hace que ocurra simultáneamente con la expansión del video.
+      tl.to(rightSideWrapperRef.current, { 
+        padding: "0px", 
+        duration: 1 
+      }, "<");
+      
       tl.to(overlayRef.current, { opacity: 1, backdropFilter: "blur(12px)", backgroundColor: "rgba(0,0,0,0.4)", duration: 1 }, ">-0.5");
       tl.fromTo(textRef.current, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "<");
       tl.to(textRef.current, { opacity: 0, duration: 0.5 }, "+=0.2");
+      
       tl.addLabel("mobileSplit");
+      
+      // 3. Restauramos el padding y ajustamos tamaños al final
       tl.to(rightSideWrapperRef.current, { height: "40%", width: "100%", padding: "1rem", duration: 2 }, "mobileSplit");
       tl.to(videoInnerRef.current, { width: "100%", height: "100%", borderRadius: "20px", duration: 2 }, "mobileSplit");
       tl.to(leftContentRef.current, { height: "60%", width: "100%", opacity: 1, duration: 2 }, "mobileSplit");
@@ -107,65 +128,27 @@ const Hero = () => {
       
       {/* === HEADER HERO === */}
       <section className="flex flex-col items-center justify-center w-full max-w-[1905px] mx-auto px-6 relative pt-4 pb-12 md:pt-10 md:pb-20">
-        
-        {/* SPAN SUPERIOR */}
         <div className="w-full max-w-[708px] flex justify-center mb-4 md:mb-0">
             <span className="text-[15px] md:text-[28px] font-bold uppercase text-gray-900 tracking-wide md:-tracking-[0.14px] text-center block">
             Punto de venta Square
             </span>
         </div>
-
-        {/* H1 TÍTULO PRINCIPAL */}
         <div className="w-full max-w-[1230px] mt-2 md:mt-4 mb-8 md:mb-12">
             <h1 className="text-[42px] leading-[1.05] md:text-[90px] md:leading-none font-serif text-center text-gray-900 font-medium tracking-tight md:-tracking-[2.7px]">
             Un PDV preparado <br /> para lo que tienes
             </h1>
         </div>
-
-        {/* === BOTONES === */}
         <div className="flex flex-row gap-3 w-full justify-center px-2 sm:w-auto sm:px-0">
-          
-          {/* BOTÓN BLANCO (Comenzar) */}
-          <button className="
-            group
-            flex-1 sm:flex-none
-            px-6 py-3 md:px-8 md:py-4 
-            rounded-full 
-            border-2 border-black 
-            bg-white text-black 
-            font-bold text-sm md:text-lg
-            cursor-pointer
-            transition-all duration-300
-            hover:scale-105 hover:bg-gray-50
-          ">
-            {/* El span tiene el contra-escalado (1/1.05 = 0.952) */}
-            <span className="block transition-transform duration-300 group-hover:scale-[0.952]">
-              Comenzar
-            </span>
+          <button className="group flex-1 sm:flex-none px-6 py-3 md:px-8 md:py-4 rounded-full border-2 border-black bg-white text-black font-bold text-sm md:text-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-gray-50">
+            <span className="block transition-transform duration-300 group-hover:scale-[0.952]">Comenzar</span>
           </button>
-
-          {/* BOTÓN NEGRO (Contactar ventas) */}
-          <button className="
-            group
-            flex-1 sm:flex-none
-            px-6 py-3 md:px-8 md:py-4 
-            rounded-full 
-            border-2 border-black 
-            bg-black text-white 
-            font-bold text-sm md:text-lg
-            cursor-pointer
-            transition-all duration-300
-            hover:scale-105 hover:bg-gray-800
-          ">
-            {/* El span tiene el contra-escalado */}
-            <span className="block transition-transform duration-300 group-hover:scale-[0.952]">
-              Contactar ventas
-            </span>
+          <button className="group flex-1 sm:flex-none px-6 py-3 md:px-8 md:py-4 rounded-full border-2 border-black bg-black text-white font-bold text-sm md:text-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-gray-800">
+            <span className="block transition-transform duration-300 group-hover:scale-[0.952]">Contactar ventas</span>
           </button>
         </div>
       </section>
 
-      {/* === CONTENEDOR ANIMADO (RESTO IGUAL) === */}
+      {/* === CONTENEDOR ANIMADO === */}
       <div
         ref={containerRef}
         className="w-full h-screen flex flex-col lg:flex-row items-stretch overflow-hidden relative bg-white"
@@ -211,13 +194,8 @@ const Hero = () => {
                 </p>
                 <ul className="space-y-2">
                   {currentContent.features.map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start text-base text-gray-700 font-medium"
-                    >
-                      <div className="mt-1 mr-3 p-0.5 bg-black rounded-full shrink-0">
-                        <Check className="w-3 h-3 text-white" />
-                      </div>
+                    <li key={index} className="flex items-start text-base text-gray-700 font-medium">
+                      <div className="mt-1 mr-3 p-0.5 bg-black rounded-full shrink-0"><Check className="w-3 h-3 text-white" /></div>
                       {item}
                     </li>
                   ))}
@@ -225,10 +203,7 @@ const Hero = () => {
               </div>
 
               <div className="pt-2">
-                <a
-                  href="#"
-                  className="inline-flex items-center text-base lg:text-lg font-bold text-black hover:underline group transition-all"
-                >
+                <a href="#" className="inline-flex items-center text-base lg:text-lg font-bold text-black hover:underline group transition-all">
                   Obtén más información
                   <ArrowUpRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </a>
@@ -237,6 +212,8 @@ const Hero = () => {
           </div>
         </div>
 
+        {/* --- LADO DERECHO (VIDEO) --- */}
+        {/* MANTENEMOS 'p-4' aquí para que inicialmente tenga el borde en móvil */}
         <div
           ref={rightSideWrapperRef}
           className="grow h-full flex items-center justify-center relative z-20 order-1 lg:order-2 p-4 lg:p-0"
