@@ -64,8 +64,6 @@ const Reviews = () => {
   useGSAP(
     () => {
       const ctx = gsap.context(() => {
-        // Se eliminó la animación de .review-metric porque los elementos ya no existen
-
         gsap.from(".review-card", {
           y: 40,
           opacity: 0,
@@ -125,7 +123,9 @@ const Reviews = () => {
       <div className="max-w-375 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         <div className="lg:col-span-4 flex flex-col gap-8">
           <div className="space-y-3">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-black">Reviews</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-black">
+              Reviews
+            </p>
             <h2
               id="reviews-heading"
               className="text-4xl md:text-[56px] leading-[1.05] tracking-tight font-serif font-medium text-gray-900"
@@ -133,15 +133,13 @@ const Reviews = () => {
               La gente que usa Square lo recomienda.
             </h2>
             <p className="text-base md:text-lg text-gray-800 leading-relaxed max-w-xl">
-              Testimonios reales de negocios que venden, agendan y cobran todos los días con Square. Sin guiones, sin retoques.
+              Testimonios reales de negocios que venden, agendan y cobran todos los
+              días con Square. Sin guiones, sin retoques.
             </p>
           </div>
-          {/* Aquí se eliminaron las métricas */}
         </div>
 
         <div className="lg:col-span-8 relative">
-          {/* Aquí se eliminaron los degradados absolutos */}
-
           <div className="flex justify-between items-center mb-4 md:mb-6">
             <p className="text-sm text-gray-800">Historias recientes</p>
             <div className="hidden md:flex gap-3">
@@ -171,24 +169,36 @@ const Reviews = () => {
             {REVIEWS.map((review) => (
               <article
                 key={review.id}
-                className="review-card flex-none w-[88vw] sm:w-[360px] lg:w-[420px] snap-start relative rounded-3xl border border-black/10 bg-white shadow-[0_25px_80px_-40px_rgba(0,0,0,0.2)] p-7 md:p-8 flex flex-col gap-6"
+                className="review-card flex-none w-[88vw] sm:w-90 lg:w-105 snap-start relative rounded-3xl border border-black/10 bg-white shadow-[0_25px_80px_-40px_rgba(0,0,0,0.2)] p-7 md:p-8 flex flex-col gap-6"
               >
-                <Quote className="w-6 h-6 text-black/10 absolute top-6 right-6" aria-hidden="true" />
+                <Quote
+                  className="w-6 h-6 fill-black text-black absolute top-6 right-6"
+                  aria-hidden="true"
+                />
 
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-black/5 text-black flex items-center justify-center text-sm font-semibold">
                     {initials(review.name)}
                   </div>
                   <div className="flex-1">
-                    <p className="text-base font-semibold text-gray-900 leading-tight">{review.name}</p>
-                    <p className="text-sm text-gray-800 leading-snug mt-0.5">{review.role}</p>
+                    <p className="text-base font-semibold text-gray-900 leading-tight">
+                      {review.name}
+                    </p>
+                    <p className="text-sm text-gray-800 leading-snug mt-0.5">
+                      {review.role}
+                    </p>
                   </div>
                 </div>
 
-                <p className="text-[17px] text-gray-900 leading-relaxed flex-1">{review.quote}</p>
+                <p className="text-[17px] text-gray-900 leading-relaxed flex-1">
+                  {review.quote}
+                </p>
 
                 <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <div className="flex items-center gap-1" aria-label={`Calificación ${review.score} de 5`}>
+                  <div
+                    className="flex items-center gap-1"
+                    aria-label={`Calificación ${review.score} de 5`}
+                  >
                     {renderStars(review.score)}
                   </div>
                   <span className="ml-1 text-gray-900">{review.score}</span>
