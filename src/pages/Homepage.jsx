@@ -5,6 +5,7 @@ import Carousel from "../components/Carousel";
 import LegalFoot from "../components/LegalFoot";
 import GrowthSection from "../components/GrowthSection";
 import GetStartedSection from "../components/GetStartedSection";
+import Reviews from "../components/Reviews";
 
 export function Homepage() {
   return (
@@ -13,6 +14,7 @@ export function Homepage() {
       <Features />
       <Carousel />
       <GrowthSection />
+      <Reviews />
       <GetStartedSection />
       <LegalFoot />
     </>
