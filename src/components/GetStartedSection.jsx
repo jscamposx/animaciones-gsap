@@ -1,28 +1,18 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
-const ClosingCta = () => {
+const GetStartedSection = () => {
   return (
     <section className="w-full bg-white py-24 md:py-40 px-6 md:px-12 border-t border-gray-100">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-12">
-        
-        {/* --- TÍTULO GIGANTE --- */}
+      <div className="max-w-375 mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-12">
         <div className="max-w-4xl">
           <h2 className="text-6xl md:text-[100px] font-serif font-medium text-gray-900 leading-[0.9] tracking-tight mb-4">
             Prueba Square
           </h2>
-          {/* Opcional: Subtítulo sutil si quisieras agregar contexto, 
-              aunque el original no lo tiene, a veces ayuda visualmente */}
-          {/* <p className="text-xl text-gray-500 mt-6 max-w-lg">
-            Empieza gratis hoy mismo y descubre por qué millones de negocios confían en nosotros.
-          </p> */}
         </div>
 
-        {/* --- BOTONES DE ACCIÓN --- */}
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          
-          {/* Botón Principal (Comenzar) - Negro Sólido */}
-          <a 
+          <a
             href="https://app.squareup.com/signup/es-US"
             className="group relative inline-flex items-center justify-center px-8 py-5 text-lg font-bold text-white bg-gray-900 rounded-full overflow-hidden transition-all duration-300 hover:bg-black hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 w-full sm:w-auto"
           >
@@ -32,18 +22,16 @@ const ClosingCta = () => {
             </span>
           </a>
 
-          {/* Botón Secundario (Ventas) - Blanco con Borde */}
-          <a 
+          <a
             href="http://squareup.com/us/es/sales/contact?page=/us/es/point-of-sale"
             className="group inline-flex items-center justify-center px-8 py-5 text-lg font-bold text-gray-900 bg-white border-2 border-gray-200 rounded-full transition-all duration-300 hover:border-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 w-full sm:w-auto"
           >
             Contactar ventas
           </a>
-
         </div>
       </div>
     </section>
   );
 };
 
-export default ClosingCta;
+export default GetStartedSection;

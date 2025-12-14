@@ -1,25 +1,22 @@
-import React from 'react';
-import Hero from '../components/Hero';
-import Features from '../components/Features';
-import HardwareCarousel from '../components/HardwareCarousel';
-import LegalFootnotes from '../components/LegalFootnotes';
-import FeatureExplorer from '../components/FeatureExplorer';
-import ClosingCta from '../components/ClosingCta';
-
+import React from "react";
+import Hero from "../components/Hero";
+import Features from "../components/Features";
+import Carousel from "../components/Carousel";
+import LegalFoot from "../components/LegalFoot";
+import GrowthSection from "../components/GrowthSection";
+import GetStartedSection from "../components/GetStartedSection";
 
 export function Homepage() {
-    return (
-        <>
-       <Hero/>
-       <Features/>
-       <HardwareCarousel/>
-
-         <FeatureExplorer/>    
-         <ClosingCta/>
-       <LegalFootnotes/>
-     
-       </>
-    );
+  return (
+    <>
+      <Hero />
+      <Features />
+      <Carousel />
+      <GrowthSection />
+      <GetStartedSection />
+      <LegalFoot />
+    </>
+  );
 }
 
 export default Homepage;
