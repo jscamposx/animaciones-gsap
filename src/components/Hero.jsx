@@ -20,8 +20,7 @@ const contentData = {
     title: "Tiendas Minoristas",
     desc: "Todo lo que necesitas para vender en tienda y en línea. Sincroniza tu inventario.",
     features: ["Inventario real", "Perfiles clientes", "Ventas omnicanal"],
-    video:
-      "https://videos.pexels.com/video-files/3196057/3196057-uhd_2560_1440_25fps.mp4",
+    video: "https://videos.pexels.com/video-files/3196057/3196057-uhd_2560_1440_25fps.mp4",
   },
   beauty: {
     label: "Belleza",
@@ -51,212 +50,144 @@ const Hero = () => {
   const leftContentRef = useRef(null);
   const leftContentInnerRef = useRef(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 1024px)", () => {
-        gsap.set(leftContentRef.current, {
-          width: "0%",
-          height: "100%",
-          opacity: 0,
-        });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "+=250%",
-            scrub: 1,
-            pin: true,
-            pinSpacing: true,
-          },
-        });
-
-        tl.to(videoInnerRef.current, {
-          width: "95vw",
-          height: "95vh",
-          borderRadius: "0px",
-          duration: 1,
-        });
-
-        tl.to(
-          overlayRef.current,
-          {
-            opacity: 1,
-            backdropFilter: "blur(16px)",
-            backgroundColor: "rgba(0,0,0,0.4)",
-            duration: 1,
-          },
-          ">-0.5"
-        );
-        tl.fromTo(
-          textRef.current,
-          { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1 },
-          "<"
-        );
-
-        tl.to(textRef.current, { y: -50, opacity: 0, duration: 0.5 }, "+=0.2");
-
-        tl.addLabel("splitMove");
-
-        tl.to(
-          leftContentRef.current,
-          { width: "50%", opacity: 1, duration: 2 },
-          "splitMove"
-        );
-        tl.fromTo(
-          leftContentInnerRef.current,
-          { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1.5 },
-          "splitMove+=0.5"
-        );
-
-        tl.to(
-          rightSideWrapperRef.current,
-          { width: "50%", padding: "2rem", duration: 2 },
-          "splitMove"
-        );
-        tl.to(
-          videoInnerRef.current,
-          {
-            width: "100%",
-            height: "70vh",
-            borderRadius: "32px",
-            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
-            duration: 2,
-          },
-          "splitMove"
-        );
-        tl.to(overlayRef.current, { opacity: 0, duration: 1 }, "splitMove+=1");
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 1024px)", () => {
+      gsap.set(leftContentRef.current, { width: "0%", height: "100%", opacity: 0 });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=250%",
+          scrub: 1,
+          pin: true,
+          pinSpacing: true,
+        },
       });
+      tl.to(videoInnerRef.current, { width: "95vw", height: "95vh", borderRadius: "0px", duration: 1 });
+      tl.to(overlayRef.current, { opacity: 1, backdropFilter: "blur(16px)", backgroundColor: "rgba(0,0,0,0.4)", duration: 1 }, ">-0.5");
+      tl.fromTo(textRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "<");
+      tl.to(textRef.current, { y: -50, opacity: 0, duration: 0.5 }, "+=0.2");
+      tl.addLabel("splitMove");
+      tl.to(leftContentRef.current, { width: "50%", opacity: 1, duration: 2 }, "splitMove");
+      tl.fromTo(leftContentInnerRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1.5 }, "splitMove+=0.5");
+      tl.to(rightSideWrapperRef.current, { width: "50%", padding: "2rem", duration: 2 }, "splitMove");
+      tl.to(videoInnerRef.current, { width: "100%", height: "70vh", borderRadius: "32px", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)", duration: 2 }, "splitMove");
+      tl.to(overlayRef.current, { opacity: 0, duration: 1 }, "splitMove+=1");
+    });
 
-      mm.add("(max-width: 1023px)", () => {
-        gsap.set(leftContentRef.current, {
-          width: "100%",
-          height: "0%",
-          opacity: 0,
-        });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "+=200%",
-            scrub: 1,
-            pin: true,
-          },
-        });
-
-        tl.to(videoInnerRef.current, {
-          width: "100vw",
-          height: "100vh",
-          borderRadius: "0px",
-          duration: 1,
-        });
-
-        tl.to(
-          overlayRef.current,
-          {
-            opacity: 1,
-            backdropFilter: "blur(12px)",
-            backgroundColor: "rgba(0,0,0,0.4)",
-            duration: 1,
-          },
-          ">-0.5"
-        );
-        tl.fromTo(
-          textRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1 },
-          "<"
-        );
-
-        tl.to(textRef.current, { opacity: 0, duration: 0.5 }, "+=0.2");
-
-        tl.addLabel("mobileSplit");
-
-        tl.to(
-          rightSideWrapperRef.current,
-          { height: "40%", width: "100%", padding: "1rem", duration: 2 },
-          "mobileSplit"
-        );
-        tl.to(
-          videoInnerRef.current,
-          { width: "100%", height: "100%", borderRadius: "20px", duration: 2 },
-          "mobileSplit"
-        );
-
-        tl.to(
-          leftContentRef.current,
-          { height: "60%", width: "100%", opacity: 1, duration: 2 },
-          "mobileSplit"
-        );
-        tl.fromTo(
-          leftContentInnerRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1.5 },
-          "mobileSplit+=0.5"
-        );
-
-        tl.to(
-          overlayRef.current,
-          { opacity: 0, duration: 1 },
-          "mobileSplit+=1"
-        );
+    mm.add("(max-width: 1023px)", () => {
+      gsap.set(leftContentRef.current, { width: "100%", height: "0%", opacity: 0 });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=200%",
+          scrub: 1,
+          pin: true,
+        },
       });
-    },
-    { scope: containerRef }
-  );
+      tl.to(videoInnerRef.current, { width: "100vw", height: "100vh", borderRadius: "0px", duration: 1 });
+      tl.to(overlayRef.current, { opacity: 1, backdropFilter: "blur(12px)", backgroundColor: "rgba(0,0,0,0.4)", duration: 1 }, ">-0.5");
+      tl.fromTo(textRef.current, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "<");
+      tl.to(textRef.current, { opacity: 0, duration: 0.5 }, "+=0.2");
+      tl.addLabel("mobileSplit");
+      tl.to(rightSideWrapperRef.current, { height: "40%", width: "100%", padding: "1rem", duration: 2 }, "mobileSplit");
+      tl.to(videoInnerRef.current, { width: "100%", height: "100%", borderRadius: "20px", duration: 2 }, "mobileSplit");
+      tl.to(leftContentRef.current, { height: "60%", width: "100%", opacity: 1, duration: 2 }, "mobileSplit");
+      tl.fromTo(leftContentInnerRef.current, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.5 }, "mobileSplit+=0.5");
+      tl.to(overlayRef.current, { opacity: 0, duration: 1 }, "mobileSplit+=1");
+    });
+  }, { scope: containerRef });
 
   const currentContent = contentData[activeTab];
 
   return (
-    <div className="bg-white w-full overflow-x-hidden">
-      {/* HEADER HERO */}
-      <section className="flex flex-col items-center justify-center pt-20  px-4 relative">
-        <span className="text-xs font-bold uppercase tracking-widest text-gray-900 mb-4">
-          Punto de venta Square
-        </span>
-        <h1 className="text-5xl lg:text-8xl font-serif text-center text-gray-900 mb-8 leading-tight font-medium">
-          Un PDV preparado <br /> para lo que tienes
-        </h1>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button className="px-8 py-4 rounded-full border-2 border-gray-900 font-bold text-gray-900 hover:bg-gray-100 transition-colors text-lg">
-            Comenzar
+    <div className="bg-white w-full overflow-x-hidden pt-10">
+      
+      {/* === HEADER HERO === */}
+      <section className="flex flex-col items-center justify-center w-full max-w-[1905px] mx-auto px-6 relative pt-4 pb-12 md:pt-10 md:pb-20">
+        
+        {/* SPAN SUPERIOR */}
+        <div className="w-full max-w-[708px] flex justify-center mb-4 md:mb-0">
+            <span className="text-[15px] md:text-[28px] font-bold uppercase text-gray-900 tracking-wide md:-tracking-[0.14px] text-center block">
+            Punto de venta Square
+            </span>
+        </div>
+
+        {/* H1 TÍTULO PRINCIPAL */}
+        <div className="w-full max-w-[1230px] mt-2 md:mt-4 mb-8 md:mb-12">
+            <h1 className="text-[42px] leading-[1.05] md:text-[90px] md:leading-none font-serif text-center text-gray-900 font-medium tracking-tight md:-tracking-[2.7px]">
+            Un PDV preparado <br /> para lo que tienes
+            </h1>
+        </div>
+
+        {/* === BOTONES === */}
+        <div className="flex flex-row gap-3 w-full justify-center px-2 sm:w-auto sm:px-0">
+          
+          {/* BOTÓN BLANCO (Comenzar) */}
+          <button className="
+            group
+            flex-1 sm:flex-none
+            px-6 py-3 md:px-8 md:py-4 
+            rounded-full 
+            border-2 border-black 
+            bg-white text-black 
+            font-bold text-sm md:text-lg
+            cursor-pointer
+            transition-all duration-300
+            hover:scale-105 hover:bg-gray-50
+          ">
+            {/* El span tiene el contra-escalado (1/1.05 = 0.952) */}
+            <span className="block transition-transform duration-300 group-hover:scale-[0.952]">
+              Comenzar
+            </span>
           </button>
-          <button className="px-8 py-4 rounded-full bg-black text-white font-bold border-2 border-black hover:bg-gray-800 transition-colors text-lg">
-            Contactar ventas
+
+          {/* BOTÓN NEGRO (Contactar ventas) */}
+          <button className="
+            group
+            flex-1 sm:flex-none
+            px-6 py-3 md:px-8 md:py-4 
+            rounded-full 
+            border-2 border-black 
+            bg-black text-white 
+            font-bold text-sm md:text-lg
+            cursor-pointer
+            transition-all duration-300
+            hover:scale-105 hover:bg-gray-800
+          ">
+            {/* El span tiene el contra-escalado */}
+            <span className="block transition-transform duration-300 group-hover:scale-[0.952]">
+              Contactar ventas
+            </span>
           </button>
         </div>
       </section>
 
-      {/* CONTENEDOR ANIMADO (PINNED) */}
+      {/* === CONTENEDOR ANIMADO (RESTO IGUAL) === */}
       <div
         ref={containerRef}
         className="w-full h-screen flex flex-col lg:flex-row items-stretch overflow-hidden relative bg-white"
       >
-        {/* --- LADO IZQUIERDO (CONTENIDO) --- */}
         <div
           ref={leftContentRef}
           className="bg-white z-30 flex flex-col justify-center relative border-r border-gray-100 order-2 lg:order-1 overflow-hidden"
         >
           <div
             ref={leftContentInnerRef}
-            className="w-full max-w-xl mx-auto px-6 lg:px-12 flex flex-col lg:justify-center h-full "
+            className="w-full max-w-xl mx-auto px-6 lg:px-12 flex flex-col justify-center h-full py-8 lg:py-0"
           >
-            {/* Tabs Responsive */}
-            <div className="flex overflow-x-auto pb-4 lg:pb-0 lg:flex-wrap gap-2 mb-4 lg:mb-8 no-scrollbar">
+            <div className="flex overflow-x-auto pb-4 lg:pb-0 lg:flex-wrap gap-2 mb-4 lg:mb-8 no-scrollbar mask-gradient">
               {Object.keys(contentData).map((key) => (
                 <button
                   key={key}
                   onClick={() => setActiveTab(key)}
-                  className={`whitespace-nowrap px-4 py-2 rounded-full border text-sm font-semibold transition-all duration-300
+                  className={`whitespace-nowrap px-4 py-2 rounded-full border text-sm font-semibold transition-all duration-300 cursor-pointer hover:shadow-md
                                 ${
                                   activeTab === key
                                     ? "bg-black text-white border-black"
-                                    : "bg-white text-gray-600 border-gray-200"
+                                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
                                 }`}
                 >
                   {contentData[key].label}
@@ -266,12 +197,11 @@ const Hero = () => {
 
             <div className="w-full h-px bg-gray-200 mb-4 lg:mb-8 hidden lg:block"></div>
 
-            {/* Texto Dinámico */}
             <div className="space-y-4 lg:space-y-6">
-              <h2 className="text-2xl lg:text-5xl font-bold text-gray-900 font-serif leading-tight">
+              <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 font-serif leading-tight">
                 {currentContent.title}
               </h2>
-              <p className="text-sm lg:text-lg text-gray-600 leading-relaxed line-clamp-3 lg:line-clamp-none">
+              <p className="text-base lg:text-lg text-gray-600 leading-relaxed">
                 {currentContent.desc}
               </p>
 
@@ -285,7 +215,7 @@ const Hero = () => {
                       key={index}
                       className="flex items-start text-base text-gray-700 font-medium"
                     >
-                      <div className="mt-1 mr-3 p-0.5 bg-black rounded-full flex-shrink-0">
+                      <div className="mt-1 mr-3 p-0.5 bg-black rounded-full shrink-0">
                         <Check className="w-3 h-3 text-white" />
                       </div>
                       {item}
@@ -297,25 +227,23 @@ const Hero = () => {
               <div className="pt-2">
                 <a
                   href="#"
-                  className="inline-flex items-center text-base lg:text-lg font-bold text-black hover:underline group"
+                  className="inline-flex items-center text-base lg:text-lg font-bold text-black hover:underline group transition-all"
                 >
                   Obtén más información
-                  <ArrowUpRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5" />
+                  <ArrowUpRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* --- LADO DERECHO (VIDEO) --- */}
         <div
           ref={rightSideWrapperRef}
-          className="flex-grow h-full flex items-center justify-center relative z-20 order-1 lg:order-2"
+          className="grow h-full flex items-center justify-center relative z-20 order-1 lg:order-2 p-4 lg:p-0"
         >
           <div
             ref={videoInnerRef}
-            className="relative overflow-hidden shadow-2xl bg-black"
-            style={{ width: "85%", height: "80vh", borderRadius: "24px" }}
+            className="relative overflow-hidden shadow-2xl bg-black w-full h-full lg:w-[85%] lg:h-[80vh] rounded-[24px]"
           >
             <video
               key={activeTab}
@@ -339,7 +267,7 @@ const Hero = () => {
               ref={textRef}
               className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center pointer-events-none opacity-0"
             >
-              <h2 className="text-white text-2xl lg:text-6xl font-bold leading-tight drop-shadow-lg font-serif">
+              <h2 className="text-white text-3xl lg:text-6xl font-bold leading-tight drop-shadow-lg font-serif">
                 Ponte en marcha con un <br /> PDV personalizado.
               </h2>
             </div>
