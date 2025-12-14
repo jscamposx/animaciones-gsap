@@ -205,59 +205,61 @@ const Features = () => {
     <>
       <section
         ref={containerRef}
-        className="bg-white w-full mx-auto max-w-375 px-6 py-24"
+        className="bg-white w-full px-6 md:px-12 py-24"
       >
-        <div className="mb-16">
-          <h2 className="mx-automax-w-375 text-center text-4xl md:text-[64px] leading-[1.05] tracking-[-0.02em]  text-gray-900">
-            Vende sin problemas en una o cien sucursales
-          </h2>
-        </div>
+        <div className="max-w-375 mx-auto">
+          <div className="mb-16">
+            <h2 className="mx-automax-w-375 text-center text-4xl md:text-[64px] leading-[1.05] tracking-[-0.02em]  text-gray-900">
+              Vende sin problemas en una o cien sucursales
+            </h2>
+          </div>
 
-        <div className="mt-16 border-t border-gray-200"></div>
+          <div className="mt-16 border-t border-gray-200"></div>
 
-        <div className="flex flex-col">
-          {FEATURES_DATA.map((feature, index) => (
-            <div key={feature.id || index} className="feature-card group">
-              <div
-                className={`grid grid-cols-1 md:grid-cols-12 items-start gap-y-8 md:gap-x-20 py-14 ${
-                  index !== 0 ? "border-t border-gray-200" : ""
-                }`}
-              >
-                <div className="col-span-1 md:col-span-5 w-full">
-                  <div
-                    className="overflow-hidden rounded-2xl cursor-pointer bg-gray-50 aspect-video w-full max-w-130"
-                    onClick={() => setSelectedFeature(feature)}
-                  >
-                    <img
-                      src={feature.image}
-                      alt={feature.alt}
-                      className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-1 md:col-span-7 flex flex-col justify-start">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-0 leading-tight">
-                    {feature.title}
-                  </h3>
-
-                  <p className="mt-4 max-w-130 text-base text-gray-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-
-                  <div className="mt-6">
-                    <button
+          <div className="flex flex-col">
+            {FEATURES_DATA.map((feature, index) => (
+              <div key={feature.id || index} className="feature-card group">
+                <div
+                  className={`grid grid-cols-1 md:grid-cols-12 items-start gap-y-8 md:gap-x-20 py-14 ${
+                    index !== 0 ? "border-t border-gray-200" : ""
+                  }`}
+                >
+                  <div className="col-span-1 md:col-span-5 w-full">
+                    <div
+                      className="overflow-hidden rounded-2xl cursor-pointer bg-gray-50 aspect-video w-full max-w-130"
                       onClick={() => setSelectedFeature(feature)}
-                      className="inline-flex items-center text-base font-bold text-black hover:text-black hover:underline decoration-2 underline-offset-4 transition-all"
                     >
-                      Más información{" "}
-                      <Plus className="w-4 h-4 ml-1 stroke-3" />
-                    </button>
+                      <img
+                        src={feature.image}
+                        alt={feature.alt}
+                        className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-span-1 md:col-span-7 flex flex-col justify-start">
+                    <h3 className="text-2xl font-semibold text-gray-900 mb-0 leading-tight">
+                      {feature.title}
+                    </h3>
+
+                    <p className="mt-4 max-w-130 text-base text-gray-600 leading-relaxed">
+                      {feature.description}
+                    </p>
+
+                    <div className="mt-6">
+                      <button
+                        onClick={() => setSelectedFeature(feature)}
+                        className="inline-flex items-center text-base font-bold text-black hover:text-black hover:underline decoration-2 underline-offset-4 transition-all"
+                      >
+                        Más información{" "}
+                        <Plus className="w-4 h-4 ml-1 stroke-3" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 

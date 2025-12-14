@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, Check } from "lucide-react";
-import defaultVideo from "../assets/1359_CoreWebAmbient_POS_Edit_9_16x9.webm";
+import defaultVideo from "../assets/video1.webm";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +21,7 @@ const contentData = {
     desc: "Todo lo que necesitas para vender en tienda y en línea. Sincroniza tu inventario.",
     features: ["Inventario real", "Perfiles clientes", "Ventas omnicanal"],
     video:
-      "https://videos.pexels.com/video-files/3196057/3196057-uhd_2560_1440_25fps.mp4",
+      defaultVideo,
   },
   beauty: {
     label: "Belleza",

@@ -93,7 +93,10 @@ const Carousel = () => {
   };
 
   return (
-    <section ref={containerRef} className="bg-white min-h-screen flex items-center justify-center p-4 sm:p-8 font-sans">
+    <section
+      ref={containerRef}
+      className="bg-white min-h-screen w-full flex items-center justify-center px-6 md:px-12 py-16 font-sans"
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         .font-inter { font-family: 'Inter', sans-serif; }
